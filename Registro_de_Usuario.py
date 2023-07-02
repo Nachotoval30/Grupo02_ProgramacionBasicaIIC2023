@@ -5,7 +5,7 @@ valor_minimo = 200
 dolares = 1
 colones = 536
 bitcoin = 30590
-deposto_usuario = list[] 
+
 def registro_usuario():
     intentos = 0
    
@@ -14,12 +14,14 @@ def registro_usuario():
         
         if usuario_nuevo.isalnum() and len(usuario_nuevo) >= 5:
             nombre = input("Ingrese su nombre: ")
+            
             while True:
                 pin_nuevo = getpass.getpass("Ingrese su pin: ")
                 if len(pin_nuevo) >= 6 and pin_nuevo.isdigit():
                     print("Su pin es correcto")
                     deposito_minimo = valor_minimo()
                     intentos_deposito = 0
+                    
                     while intentos_deposito < 3:
                         deposito = input("Ingrese su deposito: ")
                         moneda = input("Ingrese su moneda: ")
@@ -30,11 +32,7 @@ def registro_usuario():
                             else:
                                 print("Ingrese un monto correcto")
                         elif moneda ==  colones:
-
-
-
-
-                    break
+                            break
                 else:
                     print("¡Intntelo de nuevo!")
             print("Usuario Ingresado")
