@@ -1,62 +1,104 @@
-#Creacion de nombre de ususraio
+#importar getpass para que no se va la contraaseña
 import getpass
-print("Bienvenido al resgistro de ususario")
-valor_minimo = 200
+
+#Binvenida al resgistro de ususario
+print("Bienvenido al registro de usuario")
+
+
+# variables de las diferentes monedas y sus comverciones.
+valorMinimo = 200
 dolares = 1
 colones = 536
-bitcoin = 30590
+bitcoin = 30590  # Tasa de cambio ficticia del Bitcoin a dólares (1 Bitcoin = 30590 dólares)
+colonesADolares = 0.0018  # Tasa de cambio ficticia de Colones a dólares (1 Colón = 0.0018 dólares)
 
-def registro_usuario():
+#Funcion de ingreso e datos.
+def registroUsuario():
     intentos = 0
-   
+
+#bucle para el registro de usuario, contraseña y deposito.
     while intentos < 3:
-        usuario_nuevo = input("Ingrese su usuario: ")
-        
-        if usuario_nuevo.isalnum() and len(usuario_nuevo) >= 5:
+
+        #pedirle al ususario un nick.
+        usuarioNuevo = input("Ingrese su usuario: ")
+
+#Pedir nombre al ususario
+        if usuarioNuevo.isalnum() and len(usuarioNuevo) >= 5:
             nombre = input("Ingrese su nombre: ")
             
+#pidir el pin, ussuan el getpass.            
             while True:
-                pin_nuevo = getpass.getpass("Ingrese su pin: ")
-                if len(pin_nuevo) >= 6 and pin_nuevo.isdigit():
+                pinNuevo = getpass.getpass("Ingrese su pin: ")
+                if len(pinNuevo) >= 6 and pinNuevo.isdigit():
                     print("Su pin es correcto")
-                    deposito_minimo = valor_minimo()
-                    intentos_deposito = 0
                     
-                    while intentos_deposito < 3:
-                        deposito = input("Ingrese su deposito: ")
-                        moneda = input("Ingrese su moneda: ")
-                        if  moneda == dolares:    
-                            if deposito >= valor_minimo:
-                                print(f"Deposito correcto: ",{deposito})
+                    
+                    depositoMinimo = valorMinimo
+                    
+                    intentosDeposito = 0
+                    #Bucle para el deposto.                   
+                    while intentosDeposito < 3:
+                        deposito = int(input("Ingrese su depósito: "))
+                        
+                        #Pedir el tipo de moneda que desea ingresar el ususario
+                        moneda = input("Ingrese su moneda (dolares, colones o bitcoin): ")
+                        
+                        # Identificar el tipo de moneda.                      
+                        if moneda == "dolares":    
+                            if deposito >= valorMinimo:
+                                print(f"Depósito en dólares correcto: {deposito}")
                                 break
                             else:
                                 print("Ingrese un monto correcto")
-                        elif moneda ==  colones:
-                            break
+                        elif moneda == "colones":
+                            montoEnDolares = deposito * colonesADolares  # Convertir el monto a dólares
+                            if montoEnDolares >= valorMinimo:
+                                print(f"Depósito en colones correcto: {deposito} (equivalente en dólares: {montoEnDolares:.2f})")
+                                break
+                            else:
+                                print("Ingrese un monto correcto")
+                        elif moneda == "bitcoin":
+                            montoEnDolares = deposito * bitcoin  # Convertir el monto a dólares
+                            if montoEnDolares >= valorMinimo:
+                                print(f"Depósito en Bitcoin correcto: {deposito} (equivalente en dólares: {montoEnDolares:.2f})")
+                                break
+                            else:
+                                print("Ingrese un monto correcto")
+                        else:
+                            print("Moneda no válida. Intente nuevamente.")
+                    
+                    else:
+                        print("Has excedido los intentos de depósito.")
+                        return
+                    
+                    print("Usuario Ingresado")
+                    print("¡Registro Exitoso!")
+                    print("Bienvenido a DreamWorld Casino")
+                    return usuarioNuevo
                 else:
-                    print("¡Intntelo de nuevo!")
+                    print("¡Inténtelo de nuevo!")
+            #darle la binvenido al usuario.
             print("Usuario Ingresado")
             print("¡Registro Exitoso!")
-            print("Bienvendo a DreamWorld Casino")
-            return usuario_nuevo
+            print("Bienvenido a DreamWorld Casino")
+            return usuarioNuevo
         else:
-            print("Ingrese un usuario Alphanumerico y de 5 caracteres")
+            print("Ingrese un usuario alfanumérico de al menos 5 caracteres")
             intentos += 1
-    
-    print("Has exedido todo los intentos, \n Regresando al menú principal")
+    #Advertencia de exeso de intento y regreessar al menu principal
+    print("Has excedido todos los intentos. Regresando al menú principal")
+    return None
+#Almacenar los ussuarios registrados
+usuariosRegistrados = []
 
-usuarios_registrados = set()
-
+#Bule de registro de usuario.
 while True:
-    usuario_nuevo = registro_usuario()
-    if usuario_nuevo in usuarios_registrados:
-        print("El ususario ya existe, Ingrese otro.")
-    else:
-        usuarios_registrados.add(usuario_nuevo)
+    usuarioNuevo = registroUsuario()
+    
+    if usuarioNuevo is not None:
+        usuariosRegistrados.append(usuarioNuevo)
         print("Su Usuario es: ")
-    for usuario_nuevo in usuarios_registrados:
-        print(usuario_nuevo)
-
-
-registro_ususario()
+        for usuarioNuevo in usuariosRegistrados:
+            print(usuarioNuevo)
+        break
 
