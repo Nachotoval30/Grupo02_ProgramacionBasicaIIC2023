@@ -130,7 +130,7 @@ def subMenu(usuario):
             print("Salir")
         else:
             print("Gracias por preferirnos")
-    #en caso de mostrar error se cierra el programa
+    #En caso de mostrar error se cierra el programa
     except ValueError:
         print("El valor ingresado no se encuentra dentro de las opciones")
 
