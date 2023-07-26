@@ -1,0 +1,4 @@
+Mario 123 500 
+Diego 456 600 
+Stella 789 1000
+Carlos 753 500 
