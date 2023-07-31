@@ -1,0 +1,4 @@
+ID: nacho88
+Nombre: ignacio
+Contraseña: 123456
+Depósito: 200.00 dólares
