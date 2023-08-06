@@ -1,4 +1,4 @@
-Mario 123 500 
-Diego 456 600 
-Stella 789 1000
-Carlos 753 500 
+Mario 123 1748.016
+Diego 456 0
+Stella 789 543
+Carlos 753 517.699
