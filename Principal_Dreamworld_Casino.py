@@ -28,6 +28,7 @@ while opcion != 4:
 
     elif opcion == 3:
         print("Ha seleccionado Configuración Avanzada")
+        from Configuraón_Avanzada import mostrarMenu
 
     elif opcion == 4:
         print("Ha seleccionado Salir")
