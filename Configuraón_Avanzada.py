@@ -4,7 +4,7 @@
 import getpass
 import os
 import shutil
-
+#Función para solicitar el pin especial.
 def solicitarPIN():
     pinEspecial = "1234"  # Define aquí el PIN especial según las especificaciones
     intentos = 3
@@ -17,6 +17,7 @@ def solicitarPIN():
             print(f"PIN incorrecto. Le quedan {intentos} intentos.")
     return False
 
+#Función para eliminar el resgitro de un ususario.
 def eliminarUsuario(carpetaUsuario):
     try:
         shutil.rmtree(carpetaUsuario)
@@ -26,12 +27,14 @@ def eliminarUsuario(carpetaUsuario):
     except Exception as e:
         print(f"No se pudo eliminar el archivo '{carpetaUsuario}': {str(e)}")
 
+#Funcion que muestra el mei principal de la configuración avanzada 
 def mostrarMenu():
     print("Seleccione la opción que desea realizar:")
     print("1. Eliminar Usuario")
     print("2. Configuraciones Avanzadas")
     print("3. Salir")
 
+#Ciclo para selelcion la opcion.
     while True:
         try:
             opcion = int(input("Ingrese el número de la opción deseada: "))
@@ -56,6 +59,7 @@ def mostrarMenu():
             print("Opción inválida, ingrese una opción existente.")
             continue
 
+#Funcion para crear la carpeta de los valores del sistema.
 def crearArchivoConfiguracion():
     archivo = open("configuracionAvanzada.txt", "w")
     archivo.write("545\n")
@@ -66,6 +70,7 @@ def crearArchivoConfiguracion():
     archivo.write("200\n")
     archivo.close()
 
+#Función para cambiar los valores del sistema
 def modificarValorConfiguracion(opcion):
     archivo = open("configuracionAvanzada.txt", "r")
     lineas = archivo.readlines()
@@ -79,6 +84,7 @@ def modificarValorConfiguracion(opcion):
     archivo.writelines(lineas)
     archivo.close()
 
+#Función para seleccionar el valor que desea cambiar.
 def mostrarMenuModificacion():
     print("Seleccione la opción que desea modificar:")
     print("1. Tipo de cambio: Compra de dólares usando colones")
@@ -89,6 +95,7 @@ def mostrarMenuModificacion():
     print("6. Inversión mínima para registrarse")
     print("7. Regresar al menú principal")
 
+#Ciclo para selecionar la opccion.
     while True:
         try:
             opcionModificacion = int(input("Ingrese el número de la opción deseada: "))
