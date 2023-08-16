@@ -1,4 +1,4 @@
-Mario 123 9994000.0
-Diego 456 5000\\n\n
-Stella 789 543\\n\n
-Carlos 753 517.699\\n\n
+Mario 123 9990000.0
+Diego 456 5000
+Stella 789 543
+Carlos 753 517.699

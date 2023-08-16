@@ -2,6 +2,15 @@
 #Autor Iganacio Toval 
 #Fecha: 24/06/2023
 #Funcion de la pagina pricipal y seleccion de las diferentes opcines
+
+listaUsuarios = []
+listaPassword = []
+listaDinero = []
+usuario = ""
+review = 0
+validado = 0
+
+
 def mostrarPaginaPrincipal():
     print("Bienvenido a DreamWorld Casino")
     print("1. Registro de usuario nuevo")
@@ -24,7 +33,7 @@ while opcion != 4:
         from Registro_de_Usuario import registroUsuario
 
     elif opcion == 2:
-        print("Ha seleccionado DreamWorld Casino")
+        from dreamWorld_Casino import Inicio
 
     elif opcion == 3:
         print("Ha seleccionado Configuración Avanzada")

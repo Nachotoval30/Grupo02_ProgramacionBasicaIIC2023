@@ -1,11 +1,10 @@
-<<<<<<< Updated upstream
-=======
 #Segundo avance Diego Aguero
 #Dreamworld casino
 import getpass
 import random
 import sys
 import time
+import os
 
 #Estas variables se deben cargar desde la configuración avanzada
 dineroJugador = 300
@@ -42,6 +41,7 @@ valores = {
 id = ""
 pin = ""
 usuario = ""
+rutaCarpetaUsuario = "usuarios"
 review = 0
 intentos = 0
 validado = 0
@@ -57,7 +57,8 @@ def separarLista():
     #Con el archivo abierto el programa hara una revision de toda la lista y hara un append de las listas dependiendo de si es usuario, password o dinero
     #Tomar en cuenta que en el archivo se tiene que tener el formato 
     #Usuario Password Dinero
-    with open("usuariosPrueba.txt", "r") as archivo:
+    rutaArchivoUsuario = os.path.join(rutaCarpetaUsuario, "informacionUsuario.txt")
+    with open("usuarios\nacho56\informacionUsuario.txt", "r") as archivo:
         for line in archivo:
             numeroLinea = numeroLinea + 1
             line.rstrip()
@@ -65,9 +66,6 @@ def separarLista():
             listaUsuarios.append(separado[0])
             listaPassword.append(separado[1])
             listaDinero.append(separado[2])
-    #print(listaUsuarios)
-    #print(listaPassword)
-    #print(listaDinero)
     #Se tiene que cerrar el archivo antes de terminar la funcion para poder usarse despues y no desperdiciar memoria
     archivo.close()
     return listaUsuarios, listaPassword, listaDinero
@@ -949,9 +947,12 @@ def subMenu(usuario):
 #Todavia no se ha realizado un main ya que las funciones se prueban separadas primero y se debuggean
 #cuando ya funcionan se hace una revision de como trabajan en conjunto
 
-listaUsuarios, listaPassword, listaDinero = separarLista()
-usuario, review, validado = validarUsuario ()
-dineroJugador = listaDinero[review]
-dineroJugador = float(dineroJugador)
-subMenu(usuario)
->>>>>>> Stashed changes
+def Inicio():
+    listaUsuarios, listaPassword, listaDinero = separarLista()
+    usuario, review, validado = validarUsuario ()
+    dineroJugador = listaDinero[review]
+    dineroJugador = float(dineroJugador)
+    subMenu(usuario)
+
+Inicio()
+
