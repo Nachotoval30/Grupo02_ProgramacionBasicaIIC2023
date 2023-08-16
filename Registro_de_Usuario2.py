@@ -78,6 +78,12 @@ def registroUsuario():
                     with open(rutaArchivoUsuario, "w") as archivo:
                         archivo.write(f"ID: {usuarioNuevo}\nNombre: {nombre}\nContraseña: {pinNuevo}\nDepósito: {monto:.2f} dólares\n")
 
+                    #Guardar el deposito del usuario.
+                    rutaArchivoDeposito = os.path.join(rutaCarpetaUsuario,"deesposito.txt")
+                    with open(rutaArchivoDeposito, "w") as archivoDeposito:
+                        archivoDeposito.write(f"Deposito realizado:  {monto:.2f} dólares en {moneda}\n")
+
+
                     # Mostrar mensaje de registro exitoso y regresar True para indicar éxito
                     print("¡Registro Exitoso!")
                     print("Bienvenido a DreamWorld Casino")

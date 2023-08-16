@@ -1,0 +1,4 @@
+ID: nacho12
+Nombre: ignacio
+Contraseña: 123456
+Depósito: 270.00 dólares

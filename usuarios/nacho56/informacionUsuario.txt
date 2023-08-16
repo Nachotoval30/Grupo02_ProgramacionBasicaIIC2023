@@ -1,0 +1,4 @@
+ID: nacho56
+Nombre: igancio
+Contraseña: 123456
+Depósito: 200.00 dólares
