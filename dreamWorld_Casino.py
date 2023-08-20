@@ -4,11 +4,8 @@ import getpass
 import random
 import sys
 import time
-<<<<<<< Updated upstream
-=======
 import os
 import shutil
->>>>>>> Stashed changes
 
 #Estas variables se deben cargar desde la configuración avanzada
 dineroJugador = 300
@@ -18,10 +15,7 @@ contador = 0
 apuesta = 0
 
 #Simbolos de las cartas
-picas = '♠'
-corazones = '♥'
-diamantes = '♦'
-treboles = '♣'
+figuras = ['♠', '♥', '♦', '♣']
 
 valorFiguras = {
     "@": 1,
@@ -29,11 +23,26 @@ valorFiguras = {
     "+": 3,
     "7": acumulado
 }
-
+valores = {
+    'A': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    '10': 10,
+    'J': 10,
+    'Q': 10,
+    'K': 10
+}
 
 id = ""
 pin = ""
 usuario = ""
+rutaCarpetaUsuario = "usuarios"
 review = 0
 intentos = 0
 validado = 0
@@ -50,19 +59,6 @@ def separarLista():
     #Con el archivo abierto el programa hara una revision de toda la lista y hara un append de las listas dependiendo de si es usuario, password o dinero
     #Tomar en cuenta que en el archivo se tiene que tener el formato 
     #Usuario Password Dinero
-<<<<<<< Updated upstream
-    with open("usuariosPrueba.txt", "r") as archivo:
-        for line in archivo:
-            numeroLinea = numeroLinea + 1
-            line.rstrip()
-            separado = line.split(" ")
-            listaUsuarios.append(separado[0])
-            listaPassword.append(separado[1])
-            listaDinero.append(separado[2])
-    #print(listaUsuarios)
-    #print(listaPassword)
-    #print(listaDinero)
-=======
     with os.scandir("usuarios") as cmd:
         for test in cmd:
             #print("testsetse",test.name)
@@ -88,7 +84,6 @@ def separarLista():
                         listaNombre.append(separado[1])
                         #print("Nombre", listaNombre)
 
->>>>>>> Stashed changes
     #Se tiene que cerrar el archivo antes de terminar la funcion para poder usarse despues y no desperdiciar memoria
     #print(listaUsuarios, listaPassword, listaDinero)
     archivo.close()
@@ -334,249 +329,7 @@ def salir():
     print("Saliendo")
     sys.exit()
     
-
 ####################################################
-def principalBlackJack(dineroJugador):
-    dineroJugador = listaDinero[review]
-    print("DINEEEROO", dineroJugador)
-    #Se imprimen las reglas del juego
-    print('''\nBienvenido al Blackjack!!!   
-            
-    Reglas:
-        1. Para poder jugar debes apostar un monto mínimo, el cual se te indicará más adelante (no hay límite máximo).
-        2. El crupier entregará 4 cartas, 2 para la casa y 2 para el usuario.
-        3. Después de haber iniciar la partida, podrá doblar la apuesta si así lo desea.
-        4. Si obtienes dos cartas iguales, podrás decidir si dividir la partida.
-        5. Luego podrás pedir más cartas mientras tu puntuación sea menor a 21.
-        6. El juego termina si deseas parar o su tus cartas suman más de 21.
-        7. Posterior, el crupier muestra la carta oculta.
-        8. Gana el que más se acerque a 21 sin pasar dicho número.
-        9. Si gana se le duplica el monto apostado, si es empate se le devuelve dicho monto y si pierde no se le devuelve nada.
-          
-        Éxitos!!!
-        ''')
-    
-    #Ciclo principal dentro de la función
-    while True:
-        #Revisar que el jugador tenga dinero
-        if int(dineroJugador) <= 0:
-            print("DINEEEEROOOOO2", dineroJugador)
-            print('No tienes dinero en tu cuenta, necesitas un monto mínimo para poder realizar una apuesta!!')
-        #TIENE QUE SALIR AL MENU PRINCIPAL, CAMBIARLOOOOOOOOOOOOOOOO
-            sys.exit()
-
-        #Permitir al usuario que ingrese la apuesta
-        print(f'El dinero en tu cuenta es: {dineroJugador}')
-        apuesta = apuestaJugador(apuestaMinima)
-
-        #Se obtiene baraja desde una función y se le asignan las cartas al crupier y jugador
-        baraja = obtenerBaraja()
-        time.sleep(1)
-        cartaJugador1 = [baraja.pop()] 
-        cartaJugador2 = [baraja.pop()]
-        cartaDealer1 = [baraja.pop()]
-        cartaDealer2 = [baraja.pop()]
-
-        #Se realiza la suma de las cartas
-        cartasJugador = (cartaJugador1 + cartaJugador2)
-        cartasDealer = (cartaDealer1 + cartaDealer2)
-
-        print('\nApuesta: ', apuesta)
-
-        #ACCIONES DEL JUGAODR
-        while True:
-            #Se imprimen las cartas de una por una, dejando oculta la primera del crupier
-            print('')
-            time.sleep(1)
-            print('Jugador 1: ', cartaJugador1)
-            time.sleep(1)   
-            print('Crupier 1: carta oculta')
-            time.sleep(1)
-            print('Jugador 2: ', cartaJugador2)
-            time.sleep(1)
-            print('Crupier 2: ', cartaDealer2)
-            time.sleep(1)
-            mostrarJugada(cartasJugador, cartasDealer, False)
-            print('')
-
-            if valorCarta(cartasJugador) > 21:
-                break
-                
-            #Obtener el movimiento que realiza el jugador y se le descuenta al dinero lo apostado
-            movimiento = obtenerMovimiento(cartasJugador, dineroJugador - apuesta)
-
-            #Manejar las acciones del jugador
-            if movimiento == 'D' and dineroJugador < apuestaMinima:
-                print('No tienes dinero suficiente en tu cuenta para realizar la apuesta mínima')
-                break
-            elif movimiento == 'D':
-                #Jugador esta doblando la apuesta, asi que la puede incrementar
-                otraApuesta = apuestaJugador(apuestaMinima)
-                apuesta += otraApuesta
-                print(f'Apuesta incrementó a: {apuesta}')
-                print('Apuesta: ', apuesta)
-
-            if movimiento in ('H', 'D'):
-                #El jugador selecciona otro hit e incrementa apuesta
-                nuevaCarta = baraja.pop()
-                numero, simbolo = nuevaCarta
-                #Se imprime el valor obtenido en la nueva carta y se adjunta a las cartas del jugador
-                print(f'\nCarta adicional: Obtuviste un {numero} de {simbolo}')
-                cartasJugador.append(nuevaCarta)
-                if valorCarta(cartasJugador) > 21:
-                    continue
-            if movimiento in ('S', 'D'):
-                #El jugador se detiene e incrementa apuesta
-                break
-
-        
-        #AACCIONES DEL CRUPIER
-        if valorCarta(cartasJugador) <= 21:
-            while valorCarta(cartasDealer) < 16:
-                #Si las cartas del crupier suman menos de 16, se realiza un hit
-                nuevaCartaDealer = baraja.pop()
-                numero, simbolo = nuevaCartaDealer
-                #La nueva carta se adjunta a las cartas del crupier
-                cartasDealer.append(nuevaCartaDealer)
-                time.sleep(1)
-                print(f'El crupier realiza un hit, obtuvo un {numero} de {simbolo}')
-
-                #print(cartasDealer)
-                
-                if valorCarta(cartasDealer) > 21:
-                    break 
-                time.sleep(1)
-                input('Presiona Enter para continuar')
-                print('\n\n')
-
-        #Manejar las cartas al final
-        mostrarJugada(cartasJugador, cartasDealer, True) 
-
-        valorJugador = valorCarta(cartasJugador)
-        valorDealer = valorCarta(cartasDealer)
-
-        #Decisión del ganador 
-        if valorDealer > 21:
-            time.sleep(1)
-            print(f'El crupier pasó de 21.... GANASTE ${apuesta}!!!!!')
-            dineroJugador += apuesta
-        elif valorJugador == valorDealer:
-            time.sleep(1)
-            print('Es un empate, se te devuelve la apuesta')
-        elif (valorJugador < valorDealer) or (valorJugador > 21):
-            time.sleep(1)
-            print('PERDISTE!!')
-            dineroJugador -= apuesta
-        elif valorJugador > valorDealer:
-            time.sleep(1)
-            print(f'GANASTE ${apuesta}')
-            dineroJugador += apuesta
-        time.sleep(0.5)
-        input('Presiona Enter para continuar')
-        print('\n\n')
-
-#Función para preguntar al usuario la apuesta, mencionando el monto mínimo
-def apuestaJugador(apuestaMinima):
-    #Preguntar al usuario cuanto quiere apostar este round
-    while True:
-        print(f'La apuesta mínima es de {apuestaMinima}. ¿Cuánto deseas apostar?')
-        apuesta = input('Digita el monto o SALIR: ').upper().strip()
-
-        if apuesta == 'SALIR': 
-            print('Gracias por jugar!!!')
-            sys.exit()
-        #Si el usuario no ingresa un numero sigue el ciclo para volverle a preguntar 
-        if not apuesta.isdecimal():
-            continue 
-
-        #El monto de la apuesta se convierte a entero, porque es válido que digite un string
-        apuesta = int(apuesta)
-        if apuesta >= apuestaMinima:
-            return apuesta
-
-        
-#Función para obtener las cartas
-def obtenerBaraja():
-    baraja = []
-    letraJ = 'J'
-    letraQ = 'Q'
-    letraK = 'K'
-    letraA = 'A'
-    #Este ciclo recorre los 4 simbolos y dentro de este los números correspondiente
-    for simbolo in (picas, corazones, diamantes, treboles):
-        for numero in range (2,11):
-            baraja.append((str(numero), simbolo))
-        for letra in (letraJ, letraQ, letraK, letraA):
-            baraja.append((letra, simbolo))
-    #Se acomodan al azar y se retorna la baraja completa de 52 cartas
-    random.shuffle(baraja)
-    return baraja        
-
-#Función para mostrar las cartas
-def mostrarJugada(cartasJugador, cartasDealer, mostrarCartaDealer):
-    #Mostrar cartas jugador y crupier, ocultar la primer carta del crupier
-    print('')
-    if mostrarCartaDealer:
-        time.sleep(1)
-        print('Crupier tiene: ', cartasDealer)
-        time.sleep(1)
-        print('Suma cartas crupier: ', valorCarta(cartasDealer))
-    else: 
-        time.sleep(1)
-        #Ocultar primera carta del crupier
-        print('Crupier tiene: [(?, ?), {}]'.format(cartasDealer[1]) )
-        time.sleep(1)
-        print('Suma cartas crupier: ')
-
-    #Mostrar cartas del jugador
-    time.sleep(1)
-    print('Jugador tiene: ', cartasJugador)
-    time.sleep(1)
-    print('Suma cartas jugador: ', valorCarta(cartasJugador))
-        
-#Función para asignar el valor a las cartas
-def valorCarta(cartas):
-    #Devolver el valor de las cartas con letra, que valen 10 y los As que pueden valer 1 o 11, depende de la situacion
-    valor = 0
-    cantidadAs = 0
-
-    #Agregar el valor a las cartas que no son As
-    for carta in (cartas):
-        numero = carta[0]
-        if numero == 'A':
-            cantidadAs += 1
-        elif numero in ('J', 'Q', 'K'): #Estas cartas valen 10
-            valor += 10
-        else: 
-            valor += int(numero)
-    #Agregar valor a los As de 11 si no sobrepasa 21
-    valor += cantidadAs
-    for i in range (cantidadAs):
-        if valor + 10 <= 21:
-            valor += 10
-    return valor   
-
-#Función para obtener del jugador la jugada que desea realizar
-def obtenerMovimiento(cartasJugador, dineroJugador):
-     while True:
-        time.sleep(1)
-        print('Debe seleccionar la letra del movimiento que desea realizar, H: obtener otra carta, S: detenerte, D: doblar apuesta')
-        time.sleep(1)
-        movimientos = ['(H)it', '(S)tand']
-
-        #El jugador va a tener dos cartas
-        if len(cartasJugador) == 2 and dineroJugador > 0:
-            movimientos.append('(D)oblar apuesta') 
-             
-        #Preguntar que movimiento va a realizar
-        promptMovimiento = ', '.join(movimientos) + ': '
-        movimiento = input(promptMovimiento).upper()
-        if movimiento in ('H', 'S'):
-            return movimiento 
-        if movimiento == 'D' and '(D)oblar apuesta' in movimientos:
-            return movimiento
-
-#######################################################
 #Verificar que el jugador tenga el mínimo de dinero para poder jugar
 def verificarDinero():
     dineroJugador = listaDinero[review]
@@ -631,6 +384,421 @@ def obtenerApuesta():
                     #print("TESTEST", listaDinero[review])
                     return apuesta, dineroJugador
 
+####################################################
+
+#def verificarDinero():
+#    global dineroJugador
+#    #Verificar si el jugador tiene el monto mínimo para jugar
+#    if dineroJugador < apuestaMinima:
+#        print(f"Lo sentimos, no tienes el monto mínimo para jugar. La apuesta minima es de: ${apuestaMinima}")
+#        #CAMBIAAAAARRRR DEBE VOLVER AL SUBMENU DE JUEGOS
+#        sys.exit()
+#    else:
+#        print(f"Tu saldo actual es: ${dineroJugador}")
+#        return dineroJugador
+    
+'''def obtenerApuesta():
+    global apuesta
+    global dineroJugador
+
+    #Obtener apuesta del jugador, verificar que sea un número válido y que sea mayor o igual a la apuesta mínima y menor o igual al saldo del jugador
+    while True:
+        try:
+            apuesta = float(input("Ingresa el monto de tu apuesta para jugar: "))
+        except ValueError:          
+            print("Lo sentimos, debes ingresar un número entero.")
+            continue
+        else:
+            if apuesta < apuestaMinima:
+                print(f"Lo sentimos, la apuesta mínima es de: ${apuestaMinima}")
+            elif apuesta > dineroJugador:
+                print(f"Lo sentimos, no tienes saldo suficiente para apostar ${apuesta}. Tu saldo actual es: ${dineroJugador}")
+            else:
+                print(f"Tu nuevo saldo actual es: ${dineroJugador - apuesta}")
+                return apuesta, dineroJugador
+'''
+
+def obtenerBaraja():
+    #Obtener baraja de forma aleatoria
+    baraja = []
+    for figura in figuras:
+        for valor in valores:
+            baraja.append((valor, figura))
+    random.shuffle(baraja)
+    return baraja  
+
+
+def repartirCartas():
+    global cartasJugador
+    global cartasCrupier
+    global cartaJugador1
+    global cartaJugador2
+    global cartaCrupier1
+    global cartaCrupier2
+
+    baraja = obtenerBaraja()
+
+    #Repartir cartas al jugador y al crupier
+    cartaJugador1 = baraja.pop()
+    cartaCrupier1 = baraja.pop()
+    cartaJugador2 = baraja.pop()
+    cartaCrupier2 = baraja.pop()
+
+    #Asignar las cartas de cada uno
+    cartasJugador = [cartaJugador1, cartaJugador2]
+    cartasCrupier = [cartaCrupier1, cartaCrupier2]
+
+    #Mostrar las cartas del jugador y del crupier, de una por una ocultando la carta 1 del crupier
+    print('')
+    time.sleep(1)
+    print('Jugador 1: ', cartaJugador1)
+    time.sleep(1)   
+    print('Crupier 1: carta oculta')
+    time.sleep(1)
+    print('Jugador 2: ', cartaJugador2)
+    time.sleep(1)
+    print('Crupier 2: ', cartaCrupier2)
+    time.sleep(1)
+    print('')
+
+    #Verificar si el jugador tiene dos cartas iguales, si es así, preguntar si desea dividir su jugada
+    dividirJugada()
+    #Se le pregunta al jugador si desea doblar su apuesta
+    doblarApuesta()
+
+    #Mostrar las cartas del jugador y del crupier, de una por una ocultando la carta 1 del crupier
+    print(f'Cartas del jugador: {cartaJugador1}, {cartaJugador2}\n')
+    print(f"Cartas del crupier: ('?', '?'), {cartaCrupier2}\n")
+
+    #Preguntar si desea pedir una nueva carta o desea plantarse
+    otraCarta()
+    #Mostrar la carta oculta del crupier
+    print(f"Cartas del crupier: {cartaCrupier1}, {cartaCrupier2}\n")    
+    return cartasJugador, cartasCrupier, cartaJugador1, cartaJugador2, cartaCrupier1, cartaCrupier2
+
+
+def doblarApuesta():
+    global apuesta
+    global dineroJugador
+
+    #Se le pregunta al jugador si desea doblar su apuesta, si es así, se le duplica la apuesta y se le resta al saldo del jugador
+    while True:
+        try:
+            opcion = int(input("¿Deseas doblar tu apuesta? Presiona 1 (sí), presiona 2 (no): "))
+        except ValueError:
+            continue
+        if opcion == 1:
+            if apuesta * 2 <= dineroJugador:
+                apuesta = apuesta * 2
+                print(f"Tu apuesta se ha duplicado. Ahora es de ${apuesta}\n")
+                time.sleep(0.5)
+                print(f"Tu nuevo saldo actual es: ${dineroJugador - apuesta}\n")
+                time.sleep(0.5)
+                return apuesta, dineroJugador
+            else:
+                print(f"Lo sentimos, no tienes saldo suficiente para apostar ${apuesta * 2}.")
+                continue
+        elif opcion == 2:
+            print(f"Tu saldo actual es: ${dineroJugador - apuesta}\n")
+            return apuesta, dineroJugador
+        else:
+            print("Lo sentimos, debes ingresar un número entero.")
+            continue
+
+
+def otraCarta():
+    
+    global cartasJugador
+    global otraCartaJugador
+
+    #Se le pregunta al usuario si desea pedir una nueva carta o desea plantarse
+    while True:
+        try:
+            opcion = int(input("¿Deseas pedir una nueva carta? Presiona 1 (sí), presiona 2 (no): "))
+        except ValueError:
+            print("Lo sentimos, debes ingresar un número entero.")
+            continue
+        if opcion == 1:
+            cartaNueva = random.choice(obtenerBaraja())
+            cartasJugador.append(cartaNueva)
+            time.sleep(1)
+            print(f"Tu nueva carta es: {cartaNueva}")
+            time.sleep(1)
+            print(f"Tu nueva mano es: {cartasJugador}")
+        elif opcion == 2:
+            print(f"Cartas del jugador: {cartasJugador}")
+            break
+        else:
+            print("Lo sentimos, debes ingresar un número entero.")
+            continue
+
+
+def asignarValorJugador():
+    
+    global cartasJugador
+    global valorCartasJugador
+    global valorTotalJugador
+    valorCartasJugador = []
+
+    #Asignar valor a la mano del jugador, tomar los valores del diccionario y sumarlos, si es 'A' preguntar si desea que valga 1 u 11
+    for carta in cartasJugador:
+        valorCarta = valores[carta[0]]
+        valorCartasJugador.append(valorCarta)
+    valorTotalJugador = sum(valorCartasJugador)
+    if 1 in valorCartasJugador:
+        while True:    
+            try:
+                opcion = int(input("¿Deseas que el As valga 1 u 11?: "))
+            except ValueError:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+            if opcion == 1:
+                valorTotalJugador = valorTotalJugador
+                break
+            elif opcion == 11:
+                valorTotalJugador = valorTotalJugador + 10
+                break
+            else:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+    print(f"El valor de tu mano es: {valorTotalJugador}")
+    return valorTotalJugador, valorCartasJugador
+
+
+def asignarValorCrupier():
+    global cartasCrupier
+    global valorCartasCrupier
+    global valorTotalCrupier
+    valorCartasCrupier = []
+
+    #Asignar valor a la mano del crupier, tomar los valores del diccionario y sumarlos, si es 'A' y el valor total de la mano es menor o igual a 10, se le asigna el valor de 11, si es mayor a 10, se le asigna el valor de 1
+    for carta in cartasCrupier:
+        valorCarta = valores[carta[0]]
+        valorCartasCrupier.append(valorCarta) 
+    valorTotalCrupier = sum(valorCartasCrupier)
+    if 1 in valorCartasCrupier:
+        if valorTotalCrupier <= 10:
+            valorTotalCrupier = valorTotalCrupier + 10
+            print(f"El valor de la mano del crupier es: {valorTotalCrupier}")
+    print(f"El valor de la mano del crupier es: {valorTotalCrupier}\n")
+    
+    #Si el valor total de la mano del crupier es menor a 16, se le asigna una nueva carta
+    while valorTotalCrupier < 16:
+        print(f"El crupier pide una nueva carta.")
+        time.sleep(1)
+        cartaNueva = random.choice(obtenerBaraja())
+        cartasCrupier.append(cartaNueva)
+        valorCartaNueva = valores[cartaNueva[0]]
+        valorCartasCrupier.append(valorCartaNueva)
+        valorTotalCrupier = sum(valorCartasCrupier)
+        print(f"La nueva carta del crupier es: {cartaNueva}")
+        print(f"El valor de la mano del crupier es: {valorTotalCrupier}\n")
+        time.sleep(1)
+        if 1 in valorCartasCrupier:
+            if valorTotalCrupier <= 10:
+                valorTotalCrupier = valorTotalCrupier + 10
+                print(f"El valor de la mano del crupier es: {valorTotalCrupier}")
+            else:
+                print(f"El valor de la mano del crupier es: {valorTotalCrupier}")
+
+    return valorTotalCrupier, valorCartasCrupier    
+
+
+def verificarGanador():
+    global valorTotalJugador
+    global valorTotalCrupier
+    global apuesta
+    global dineroJugador
+
+    #Verificar si el jugador o el crupier ganan, si el jugador gana, se le suma la apuesta al saldo del jugador, si el crupier gana, se le resta la apuesta al saldo del jugador
+    if valorTotalJugador > valorTotalCrupier and valorTotalJugador <= 21:
+        dineroJugador = dineroJugador + apuesta
+        print(f"Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+    elif valorTotalCrupier > valorTotalJugador and valorTotalCrupier <= 21:
+        dineroJugador = dineroJugador - apuesta
+        print(f"Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+    elif valorTotalJugador > 21 and valorTotalCrupier <= 21:
+        dineroJugador = dineroJugador - apuesta
+        print(f"Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+    elif valorTotalCrupier > 21 and valorTotalJugador <= 21:
+        dineroJugador = dineroJugador + apuesta
+        print(f"Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+    elif valorTotalJugador == 21 and valorTotalCrupier == 21:
+        print(f"Empate, ambos alcanzaron 21, tu saldo actual es de: ${dineroJugador}")
+    elif valorTotalJugador == valorTotalCrupier:
+        print(f"Empate, tu saldo actual es de: ${dineroJugador}")
+    return dineroJugador    
+
+
+
+def dividirJugada():
+    global valorTotalCrupier
+    global cartasJugador
+    global cartasJugador1
+    global cartasJugador2
+    global cartaJugador1
+    global cartaJugador2
+    global cartaJugador3
+    global cartaJugador4
+    
+    global apuesta
+    global dineroJugador
+
+    baraja = obtenerBaraja()
+
+    cartaJugador3 = baraja.pop()
+    cartaJugador4 = baraja.pop()
+    #Si el jugador tiene dos cartas iguales, se le asignan dos cartas más, una a cada mano
+    cartasJugador1 = [cartaJugador1, cartaJugador3]
+    cartasJugador2 = [cartaJugador2, cartaJugador4]
+
+    #Si el jugador divide la jugada, se le asigna un nuevo valor a cada mano y se le resta la apuesta al saldo del jugador
+    if cartaJugador1[0] == cartaJugador2[0]:
+        while True:
+            try:
+                opcion = int(input("¿Deseas dividir tu jugada? Presiona 1 (sí), presiona 2 (no): "))
+            except ValueError:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+            if opcion == 1:
+                if cartaJugador1[0] == cartaJugador2[0]:
+                    time
+                    print(f"\nTu primera mano es: {cartasJugador1}")
+                    print(f"Tu segunda mano es: {cartasJugador2}")
+                    dineroJugador = dineroJugador - apuesta
+                    time
+                    print(f"Tu nuevo saldo actual es: ${dineroJugador}")
+                    time.sleep(1)
+                    valorTotalJugador1 = asignarValorJugadorJugadaDividida(cartasJugador1)
+                    valorTotalJugador2 = asignarValorJugadorJugadaDividida(cartasJugador2)
+                    asignarValorCrupier()
+
+                    #Se le asigna un nuevo valor a cada mano y se verifica si el jugador o el crupier ganan, si el jugador gana, se le suma la apuesta al saldo del jugador, si el crupier gana, se le resta la apuesta al saldo del jugador
+                    if valorTotalJugador1 > valorTotalCrupier and valorTotalJugador1 <= 21:
+                        dineroJugador = dineroJugador + apuesta
+                        print(f"Resultado 1. Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalCrupier > valorTotalJugador1 and valorTotalCrupier <= 21:
+                        dineroJugador = dineroJugador - apuesta
+                        print(f"Resultado 1. Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalJugador1 > 21 and valorTotalCrupier <= 21:
+                        dineroJugador = dineroJugador - apuesta
+                        print(f"Resultado 1. Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalCrupier > 21 and valorTotalJugador1 <= 21:
+                        dineroJugador = dineroJugador + apuesta
+                        print(f"Resultado 1. Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalJugador1 == 21 and valorTotalCrupier == 21:
+                        print(f"Resultado 1. Empate, ambos alcanzaron 21, tu saldo actual es de: ${dineroJugador}")
+                    elif valorTotalJugador1 == valorTotalCrupier:
+                        print(f"Resultado 1. Empate, tu saldo actual es de: ${dineroJugador}")
+                    if valorTotalJugador2 > valorTotalCrupier and valorTotalJugador1 <= 21:
+                        dineroJugador = dineroJugador + apuesta
+                        print(f"Resultado 2. Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalCrupier > valorTotalJugador2 and valorTotalCrupier <= 21:
+                        dineroJugador = dineroJugador - apuesta
+                        print(f"Resultado 2. Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalJugador2 > 21 and valorTotalCrupier <= 21:
+                        dineroJugador = dineroJugador - apuesta
+                        print(f"Resultado 2. Perdiste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalCrupier > 21 and valorTotalJugador2 <= 21:
+                        dineroJugador = dineroJugador + apuesta
+                        print(f"Resultado 2. Ganaste, tu nuevo saldo es de: ${dineroJugador}")
+                    elif valorTotalJugador2 == 21 and valorTotalCrupier == 21:
+                        print(f"Resultado 2. Empate, ambos alcanzaron 21, tu saldo actual es de: ${dineroJugador}")
+                    elif valorTotalJugador2 == valorTotalCrupier:
+                        print(f"Resultado 2. Empate, tu saldo actual es de: ${dineroJugador}")
+                    print(f"\nTu saldo final de esta partida es: ${dineroJugador}")
+                    break       
+                else:
+                    print("Lo sentimos, no puedes dividir tu jugada.")
+                    continue
+            elif opcion == 2:
+                print(f"Tu saldo actual es: ${dineroJugador}")
+                break
+            else:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+        rondaJugada()
+
+
+def asignarValorJugadorJugadaDividida(cartasJugador):
+    valorCartasJugador = []
+
+    #Asignar valor a la mano del jugador, tomar los valores del diccionario y sumarlos, si es 'A' preguntar si desea que valga 1 u 11, recibe como parametro la mano del jugador y retorna el valor de esta
+    for carta in cartasJugador:
+        valorCarta = valores[carta[0]]
+        valorCartasJugador.append(valorCarta)
+    valorTotalJugador = sum(valorCartasJugador)
+    if 1 in valorCartasJugador:
+        while True:    
+            try:
+                opcion = int(input("¿Deseas que el As valga 1 u 11?: "))
+            except ValueError:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+            if opcion == 1:
+                valorTotalJugador = valorTotalJugador
+                break
+            elif opcion == 11:
+                valorTotalJugador = valorTotalJugador + 10
+                break
+            else:
+                print("Lo sentimos, debes ingresar un número entero.")
+                continue
+    print(f"El valor de tu mano es: {valorTotalJugador}")
+    return valorTotalJugador
+
+
+
+def rondaJugada():
+    while True:
+        #Preguntar si desea jugar una nueva ronda
+        try:
+            opcion = int(input("¿Deseas iniciar una jugada? Presiona 1 (sí), presiona 2 (no): "))
+        except ValueError:
+            print("Lo sentimos, debes ingresar un número entero.")
+            continue
+        #Si el jugador desea jugar una nueva ronda, se verifica si tiene el monto mínimo para jugar, se le pregunta el monto de su apuesta y se le reparten las cartas, se asignan valores y se verifica el ganador
+        if opcion == 1:
+                verificarDinero()
+                obtenerApuesta()
+                repartirCartas()
+                asignarValorJugador()
+                asignarValorCrupier()
+                verificarGanador()
+        else:
+            write= 0
+            listaDinero[review] = str(dineroJugador)
+            print(f"Tu nuevo saldo actual es: ${dineroJugador}")
+            with open("usuariosPrueba.txt", "w") as archivo:
+                for i in listaUsuarios:
+                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
+                    archivo.write("\n")
+                    write = write + 1
+            print("Gracias por jugar.")
+            #CAMBIAAAAARRRR DEBE VOLVER AL SUBMENU DE JUEGOS
+            sys.exit()
+
+
+def principalBlackJack():
+    #Mostrar instrucciones del juego
+    print('''Bienvenido al juego de Blackjack
+          
+    Instrucciones:
+    El jugador juega contra el crupier (computadora)
+    El jugador gana si suma 21 puntos o si el crupier se pasa de 21 puntos
+    El jugador pierde si se pasa de 21 puntos o si el crupier suma 21 puntos
+    El jugador empata si el jugador y crupier suman 21 puntos o si ambos tienen el mismo puntaje
+    Si obtienes dos cartas iguales, puedes dividir la partida, para esto debes doblar la apuesta.
+    Después de iniciada la jugada puedes decidir si doblar la apuesta o mantenerla
+    Después puedes pedir cuantas cartas necesites, recuerda que si pasas de 21 pierdes!!!
+    
+    ''')
+
+    rondaJugada()
+
+
+#######################################################
+#Verificar que el jugador tenga el mínimo de dinero para poder jugar
 
 def obtenerFiguras():
     figuras = ["@", "@", "@", "@", "#", "#", "#", "+", "+", "7"]
@@ -755,7 +923,13 @@ def subMenu(usuario, review):
                 revisarSaldo(review)
             elif decision == 4:
                 #Se encuentra en proceso en conjunto con otro companero
-                principal()
+                decision = int(input("Seleccione 1 para jugar BlackJack \nSeleccione 2 para jugar Tragamonedas \nSeleccione 3 para salir al menu"))
+                if decision == 1:
+                    principalBlackJack()
+                elif decision == 2:
+                    principal()
+                elif decision == 3:
+                    subMenu(usuario)
                 #principalBlackJack(dineroDisponible)
             elif decision == 5:
                 #Se encuentra en proceso en conjunto con otro companero
@@ -774,11 +948,6 @@ def subMenu(usuario, review):
 #Todavia no se ha realizado un main ya que las funciones se prueban separadas primero y se debuggean
 #cuando ya funcionan se hace una revision de como trabajan en conjunto
 
-<<<<<<< Updated upstream
-listaUsuarios, listaPassword, listaDinero = separarLista()
-usuario, review, validado = validarUsuario ()
-subMenu(usuario)
-=======
 def Inicio():
     listaUsuarios, listaPassword, listaDinero = separarLista()
     usuario, review, validado = validarUsuario ()
@@ -788,4 +957,3 @@ def Inicio():
 
 Inicio()
 
->>>>>>> Stashed changes
