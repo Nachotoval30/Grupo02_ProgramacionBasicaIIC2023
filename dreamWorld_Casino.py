@@ -331,24 +331,25 @@ def salir():
     
 ####################################################
 #Verificar que el jugador tenga el mínimo de dinero para poder jugar
-def verificarDinero():
+def verificarDinero(review):
     dineroJugador = listaDinero[review]
     dineroJugador = float(dineroJugador)
     #print("DINERRRROOOOOO", dineroJugador)
     if dineroJugador < apuestaMinima:
         print(f"Lo sentimos, no tienes el monto mínimo para jugar. La apuesta minima es de: ${apuestaMinima}")
         #CAMBIAAAAARRRR DEBE VOLVER AL SUBMENU DE JUEGOS
-        subMenu(usuario)
+        subMenu(usuario, review)
     else:
         print(f"Tu saldo actual es: ${dineroJugador}")
         return dineroJugador
     
 
-def obtenerApuesta():
+def obtenerApuesta(review):
     global apuesta
     dineroJugador = listaDinero[review]
     dineroJugador = float(dineroJugador)
     write = 0
+    rutaArchivo = os.path.join(rutaCarpetaUsuario, listaUsuarios[review], "informacionUsuario.txt")
     #global dineroJugador
     while True:
         try:
@@ -361,9 +362,8 @@ def obtenerApuesta():
             listaDinero[review] = str(dineroJugador)
             print(f"Tu nuevo saldo actual es: ${dineroJugador}")
             with open(rutaArchivo, "w") as archivo:
-                for i in listaUsuarios:
-                    archivo.write(f"ID {listaUsuarios[0]} \nNombre {listaNombre[0]} \nContrasena {listaPassword[0]} \nDeposito {listaDinero[0]} ")
-                    write = write + 1
+                archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
+                write = write + 1
                     #print("ESCRIBIENDOO")
             print("Gracias por participar.")
             sys.exit()
@@ -717,7 +717,7 @@ def dividirJugada():
             else:
                 print("Lo sentimos, debes ingresar un número entero.")
                 continue
-        rondaJugada()
+        rondaJugada(review)
 
 
 def asignarValorJugadorJugadaDividida(cartasJugador):
@@ -749,7 +749,8 @@ def asignarValorJugadorJugadaDividida(cartasJugador):
 
 
 
-def rondaJugada():
+def rondaJugada(review):
+    rutaArchivo = os.path.join(rutaCarpetaUsuario, listaUsuarios[review], "informacionUsuario.txt")
     while True:
         #Preguntar si desea jugar una nueva ronda
         try:
@@ -760,7 +761,7 @@ def rondaJugada():
         #Si el jugador desea jugar una nueva ronda, se verifica si tiene el monto mínimo para jugar, se le pregunta el monto de su apuesta y se le reparten las cartas, se asignan valores y se verifica el ganador
         if opcion == 1:
                 verificarDinero()
-                obtenerApuesta()
+                obtenerApuesta(review)
                 repartirCartas()
                 asignarValorJugador()
                 asignarValorCrupier()
@@ -769,11 +770,9 @@ def rondaJugada():
             write= 0
             listaDinero[review] = str(dineroJugador)
             print(f"Tu nuevo saldo actual es: ${dineroJugador}")
-            with open("usuariosPrueba.txt", "w") as archivo:
-                for i in listaUsuarios:
-                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                    archivo.write("\n")
-                    write = write + 1
+            with open(rutaArchivo, "w") as archivo:
+                archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
+                
             print("Gracias por jugar.")
             #CAMBIAAAAARRRR DEBE VOLVER AL SUBMENU DE JUEGOS
             sys.exit()
@@ -811,12 +810,12 @@ def obtenerFiguras():
     return figurasObtenidas
 
 
-def ejecutarJugada():
+def ejecutarJugada(review):
     global acumulado, contador
     dineroJugador = listaDinero[review]
     dineroJugador = float(dineroJugador)
     while True:
-        obtenerApuesta()
+        obtenerApuesta(review)
         input("Presiona enter para jalar la palanca e iniciar el juego...")
         time.sleep(1)
 
@@ -874,7 +873,7 @@ def ejecutarJugada():
                 sys.exit()
 
 
-def principal():
+def principal(review):
     print('''\nBienvenido a la maquina tragamonedas!!!   
             
     Reglas:
@@ -890,8 +889,8 @@ def principal():
         ''')      
 
     while True:
-        verificarDinero()
-        ejecutarJugada()
+        verificarDinero(review)
+        ejecutarJugada(review)
 
 ########################################################
 
@@ -927,7 +926,7 @@ def subMenu(usuario, review):
                 if decision == 1:
                     principalBlackJack()
                 elif decision == 2:
-                    principal()
+                    principal(review)
                 elif decision == 3:
                     subMenu(usuario)
                 #principalBlackJack(dineroDisponible)
