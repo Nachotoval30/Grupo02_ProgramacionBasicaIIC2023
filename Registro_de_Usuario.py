@@ -66,12 +66,33 @@ def registroUsuario():
                                 print("Ingrese un monto correcto")
                         else:
                             print("Moneda no válida. Intente nuevamente.")
+<<<<<<< Updated upstream
                     
                     else:
                         print("Has excedido los intentos de depósito.")
                         return
                     
                     print("Usuario Ingresado")
+=======
+                            continue
+
+                        if monto >= valorMinimo:
+                            break
+                        else:
+                            print("El depósito mínimo es de $200. Intente nuevamente.")
+
+                    # Crear una carpeta para el nuevo usuario
+                    rutaCarpetaUsuario = os.path.join(carpetaUsuarios, usuarioNuevo)
+                    if not os.path.exists(rutaCarpetaUsuario):
+                        os.mkdir(rutaCarpetaUsuario)
+
+                    # Guardar la información del usuario en un archivo
+                    rutaArchivoUsuario = os.path.join(rutaCarpetaUsuario, "informacionUsuario.txt")
+                    with open(rutaArchivoUsuario, "w") as archivo:
+                        archivo.write(f"ID {usuarioNuevo} \nNombre {nombre} \nContrasena {pinNuevo} \nDeposito {monto:.2f} ")
+
+                    # Mostrar mensaje de registro exitoso y regresar True para indicar éxito
+>>>>>>> Stashed changes
                     print("¡Registro Exitoso!")
                     print("Bienvenido a DreamWorld Casino")
                     return usuarioNuevo

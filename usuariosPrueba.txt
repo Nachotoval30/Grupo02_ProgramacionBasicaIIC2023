@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 Mario 123 9994550.0
 Diego 456 5000\n
 Stella 789 543\n
 Carlos 753 517.699\n
+=======
+cho56 123456 20000.421
+>>>>>>> Stashed changes

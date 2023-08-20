@@ -1,0 +1,6 @@
+colones 565 
+bitcoin 26755 
+valorAcumulado 30000 
+apuestaMinTragamonedas 50 
+apuestaMinBlackjack 150 
+inversionMinima 200 

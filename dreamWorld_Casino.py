@@ -4,6 +4,11 @@ import getpass
 import random
 import sys
 import time
+<<<<<<< Updated upstream
+=======
+import os
+import shutil
+>>>>>>> Stashed changes
 
 #Estas variables se deben cargar desde la configuración avanzada
 dineroJugador = 300
@@ -36,7 +41,8 @@ dineroDisponible = 0
 listaUsuarios = []
 listaPassword = []
 listaDinero = []
-
+listaNombre = []
+#rutaArchivo = 'usuarios/cho56/informacionUsuario.txt'
 #En la siguiente funcion separamos el archivo en diferentes listas, para asi tener los usuarios, password y dineros registrados
 #Tomar en cuenta que el archivo al que llama es una prueba
 def separarLista():
@@ -44,6 +50,7 @@ def separarLista():
     #Con el archivo abierto el programa hara una revision de toda la lista y hara un append de las listas dependiendo de si es usuario, password o dinero
     #Tomar en cuenta que en el archivo se tiene que tener el formato 
     #Usuario Password Dinero
+<<<<<<< Updated upstream
     with open("usuariosPrueba.txt", "r") as archivo:
         for line in archivo:
             numeroLinea = numeroLinea + 1
@@ -55,7 +62,35 @@ def separarLista():
     #print(listaUsuarios)
     #print(listaPassword)
     #print(listaDinero)
+=======
+    with os.scandir("usuarios") as cmd:
+        for test in cmd:
+            #print("testsetse",test.name)
+            rutaArchivo = os.path.join(rutaCarpetaUsuario, test.name, "informacionUsuario.txt")
+            with open(rutaArchivo, "r") as archivo:
+            #with open("usuariosPrueba.txt", "r") as archivo:
+                for line in archivo:
+                    numeroLinea = numeroLinea + 1
+                    #separado = " ".join(item.strip() for item in line.split(": "))
+                    separado = line.split(" ")
+                    #separado = line.split(" ")
+                    #print("SEPARADO", separado[0])
+                    if(separado[0] == "ID"):
+                        listaUsuarios.append(separado[1])
+                        #print("ID", listaUsuarios)
+                    elif(separado[0] == "Contrasena"):
+                        listaPassword.append(separado[1])
+                        #print("Contrasena", listaPassword)
+                    elif(separado[0] == "Deposito"):
+                        listaDinero.append(separado[1])
+                        #print("deposito", listaDinero)
+                    elif(separado[0] == "Nombre"):
+                        listaNombre.append(separado[1])
+                        #print("Nombre", listaNombre)
+
+>>>>>>> Stashed changes
     #Se tiene que cerrar el archivo antes de terminar la funcion para poder usarse despues y no desperdiciar memoria
+    #print(listaUsuarios, listaPassword, listaDinero)
     archivo.close()
     return listaUsuarios, listaPassword, listaDinero
 
@@ -72,23 +107,22 @@ def validarUsuario():
             count = count + 1 
             print ("Intento #", count - 1)
             id = getpass.getpass("Ingrese el ID de usuario:")
+            #print(id)
             review = 0
             #El for hace una revision de la lista de usuarios para saber si el mismo hace match con los que se encuentran en la base de datos
             for usuario in listaUsuarios:
                 #La variable review funciona para llevar el conteo de las veces que se revisa la lista hasta que se encuentre un match
                 #esto nos va a servir cuando se quiera validar el password del cliente
                 review = review + 1
-                print("index", review)
                 if(id == usuario):
                     intentos = 3
-                    print("index", review)
-                    print("id", id)
+                    #print("index", review)
+                    #print("id", id)
                     print("Usuario ingresado correctamente")
                     break
         else:             
             print("Se excedió en el maximo de intentos para ingresar su ID, volviendo al menú principal")
-            #Se llama a la funcion Validar Usuarios para efectos practicos, en el programa final se va a llamar al menu inicial
-            validarUsuario(listaUsuarios, listaPassword)    
+            from Principal_Dreamworld_Casino import mostrarMenu    
 
     #La siguiente seccion trabaja de la misma manera que la anterior con un pequeno cambio
     count = 1
@@ -111,14 +145,14 @@ def validarUsuario():
         else:             
             print("Se excedió en el maximo de intentos para ingresar su PIN, volviendo al menú principal")
             #Se llama a la funcion Validar Usuarios para efectos practicos, en el main se debe llamar al menu inicial
-            validarUsuario(listaUsuarios, listaPassword)     
-    print("review", review)
+            from Principal_Dreamworld_Casino import mostrarMenu     
+    #print("review", review)
     review = review - 1
     return usuario, review, validado
 
 
 #Esta funcion realiza la revision de saldo del usuario
-def revisarSaldo():
+def revisarSaldo(review):
     #Para realizarlo vamos a llamar a la funcion que separa en listas las bases de datos
     #y devuelve el index del que se quiere buscar para obtener el dinero en especifico
     #listaUsuarios, listaPassword, listaDinero= separarLista()
@@ -126,15 +160,12 @@ def revisarSaldo():
     print("Dinero disponible", dineroDisponible)
     return dineroDisponible
 
-def retirarDinero():
-    dineroDisponible  = int(revisarSaldo())
+def retirarDinero(usuario, review):
+    dineroDisponible  = float(revisarSaldo(review))
     count = 1
-    print("review2", review)
+    rutaArchivo = os.path.join(rutaCarpetaUsuario, usuario, "informacionUsuario.txt")
     r=0
     intentos = 0
-    archivo = open("usuariosPrueba.txt", "w")
-    archivo.truncate(0)
-    archivo.close()
     #listaUsuarios, listaPassword, listaDinero= separarLista()
     print("Ingrese la cantidad de Dinero a retirar, recuerde que tiene 3 intentos para realizar el retiro")
     while intentos < 3: 
@@ -143,22 +174,20 @@ def retirarDinero():
             count = count + 1 
             #print ("Intento #", count - 1)
             try:
-                retiro = int(input("Cantidad de Dinero a retirar"))
-                #print("retiro", retiro)
+                retiro = float(input("Cantidad de Dinero a retirar"))
+                #print("REVIEWW", listaDinero)
                 #print("disponible", dineroDisponible)
                 if(retiro <= dineroDisponible):
-                    listaDinero[review] = int(listaDinero[review]) - retiro
+                    listaDinero[review] = float(listaDinero[review]) - retiro
                     #Agregar escritura de datos
-                    with open("usuariosPrueba.txt", "w") as archivo:
-                        for i in listaUsuarios:
-                            archivo.write(str([listaUsuarios[r], listaPassword[r], listaDinero[r]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                            archivo.write("\n")
-                            r = r + 1
+                    with open(rutaArchivo, "w") as archivo:
+                        archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
+                        r = r + 1
                     print("El dinero retirado es de:", retiro)
                     print("El disponible actual es de:", listaDinero[review])
                     archivo.close()
                     intentos = 3
-                    subMenu(usuario)
+                    subMenu(usuario, review)
                     
                 else:
                     print("El valor ingresado es mayor al disponible de la cuenta, hemos evitado la transacción")
@@ -167,15 +196,13 @@ def retirarDinero():
                 count = count + 1
         else:
             print("Se excedió del numero de intentos")
-            with open("usuariosPrueba.txt", "w") as archivo:
-                for i in listaUsuarios:
-                    archivo.write(str([listaUsuarios[r], listaPassword[r], listaDinero[r]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                    archivo.write(" \n")
-                    r = r + 1
-            subMenu(usuario)
+            with open(rutaArchivo, "w") as archivo:
+                archivo.write(f"ID {usuario} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
+                r = r + 1
+            subMenu(usuario, review)
             break
                 
-def depositarDinero():
+def depositarDinero(usuario, review):
     listaDivisa = []
     listaValor = []
     deposito = 0
@@ -183,11 +210,12 @@ def depositarDinero():
     count = 0
     valorDivisa = 0
     write = 0
+    rutaArchivo = os.path.join(rutaCarpetaUsuario, usuario, "informacionUsuario.txt")
     print("Las divisas soportadas son las siguientes:")
     print("1-Colones")
     print("2-Dolares")
     print("3-Bitcoin")
-    with open("divisas.txt", "r") as archivo:
+    with open("configuracionAvanzada.txt", "r") as archivo:
         for line in archivo:
             numeroLinea = numeroLinea + 1    
             line.rstrip()
@@ -195,7 +223,9 @@ def depositarDinero():
             listaDivisa.append(separado[0])
             listaValor.append(separado[1])
             print(f"El valor de las divisa {listaDivisa[count]} es de {listaValor[count]}")
-            count = count +1 
+            count = count +1
+            if count == 2:
+                break
     archivo.close()
     count=0
     #Se realiza un try y except para tomar en cuenta que un usuario ingrese un valor distinto a los solicitados en el menu
@@ -219,11 +249,11 @@ def depositarDinero():
                             deposito = round(deposito, 3)
                             print("Saldo Actual", deposito)
                             listaDinero[review] = str(deposito)
-                            with open("usuariosPrueba.txt", "w") as archivo:
-                                for i in listaUsuarios:
-                                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                                    archivo.write("\n")
-                                    write = write + 1
+                            with open(rutaArchivo, "w") as archivo:
+                                archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
+                                    #archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
+                                    #archivo.write("\n")
+                                    #write = write + 1
                     break
                 except ValueError:
                     count = count +1     
@@ -239,11 +269,8 @@ def depositarDinero():
                     deposito = round(deposito, 3)
                     print("Saldo Actual", deposito)
                     listaDinero[review] = str(deposito)
-                    with open("usuariosPrueba.txt", "w") as archivo:
-                        for i in listaUsuarios:
-                            archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                            archivo.write("\n")
-                            write = write + 1
+                    with open(rutaArchivo, "w") as archivo:
+                        archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
                     break
                 except:
                     count = count +1
@@ -262,11 +289,8 @@ def depositarDinero():
                             deposito = round(deposito, 3)
                             print("Saldo Actual", deposito)
                             listaDinero[review] = str(deposito)
-                            with open("usuariosPrueba.txt", "w") as archivo:
-                                for i in listaUsuarios:
-                                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                                    archivo.write("\n")
-                                    write = write + 1
+                            with open(rutaArchivo, "w") as archivo:
+                                archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
                     break
 
                 except ValueError:
@@ -280,41 +304,35 @@ def depositarDinero():
             print("El valor ingresado no se encuentra dentro de las opciones, intentelo de nuevo")
     else:
         print("Excedio el maximo de intentos para realizar el deposito, volviendo al menu principal")
-        subMenu(usuario)        
+        subMenu(usuario, review)        
 
 
 def eliminarUsuario():
     write = 0
     print("Antes de eliminar el usuario vamos a verificar su identidad")
     usuario, review, validado = validarUsuario()
-    dineroDisponible = int(revisarSaldo())
+    dineroDisponible = float(revisarSaldo(review))
     print(dineroDisponible)
     if(validado == 1):
         if dineroDisponible == 0:
             #print("aqui")
-            listaUsuarios.pop(review)
-            listaPassword.pop(review)
-            listaDinero.pop(review)
-            print(listaUsuarios)
-            print(listaPassword)
-            print(listaDinero)
-            with open("usuariosPrueba.txt", "w") as archivo:
-                for i in listaUsuarios:
-                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                    archivo.write("\n")
-                    write = write + 1
+            shutil.rmtree(os.path.join(rutaCarpetaUsuario, usuario))
+            print("Usuario eliminado con éxito!")
+            print("Regresando al menu principal")
+            from Principal_Dreamworld_Casino import mostrarMenu    
         else:
             print("Para eliminar el usuario debe retirar todo el dinero o volver a jugar")
             print("Regresando al menu")
-            subMenu(usuario)
+            subMenu(usuario, review)
     else:
         print("Usuario no validado")
         print("Regresando al menu")
-        subMenu(usuario)
+        subMenu(usuario, review)
 
 def salir():
     #Debe salir al menu principal, regresando a submenu por temas practicos
     print("Saliendo")
+    sys.exit()
     
 
 ####################################################
@@ -589,10 +607,9 @@ def obtenerApuesta():
             #####Escribir el valor en el archivo
             listaDinero[review] = str(dineroJugador)
             print(f"Tu nuevo saldo actual es: ${dineroJugador}")
-            with open("usuariosPrueba.txt", "w") as archivo:
+            with open(rutaArchivo, "w") as archivo:
                 for i in listaUsuarios:
-                    archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                    archivo.write("\n")
+                    archivo.write(f"ID {listaUsuarios[0]} \nNombre {listaNombre[0]} \nContrasena {listaPassword[0]} \nDeposito {listaDinero[0]} ")
                     write = write + 1
                     #print("ESCRIBIENDOO")
             print("Gracias por participar.")
@@ -712,7 +729,7 @@ def principal():
 
 #La funcion submenu es la principal funcion que se va a mostrar al usuario
 #actualmente algunas de sus funciones se encuentran en proceso
-def subMenu(usuario):
+def subMenu(usuario, review):
     #separarLista()
     while True:
         print("Bienvenido a dreamworld casino ", usuario)
@@ -726,16 +743,16 @@ def subMenu(usuario):
         try:
             decision = int(input("Seleccione una opción"))
             #Si el valor ingresado es 1 se llama a la funcion retirar dinero y asi consecutivamente de acuerdo a lo solicitado
-            
+            print(decision)
             if decision == 1:
                 #Al momento de la revision dos se encuentra en proceso la funcion retirar dinero
-                retirarDinero()
+                retirarDinero(usuario, review)
             elif decision == 2:
                 #Al momento de la revision dos se encuentra en proceso la funcion de depositar dinero
-                depositarDinero()
+                depositarDinero(usuario, review)
             elif decision == 3:
                 #la funcion revisar saldo se encuentra corriendo
-                revisarSaldo()
+                revisarSaldo(review)
             elif decision == 4:
                 #Se encuentra en proceso en conjunto con otro companero
                 principal()
@@ -757,6 +774,18 @@ def subMenu(usuario):
 #Todavia no se ha realizado un main ya que las funciones se prueban separadas primero y se debuggean
 #cuando ya funcionan se hace una revision de como trabajan en conjunto
 
+<<<<<<< Updated upstream
 listaUsuarios, listaPassword, listaDinero = separarLista()
 usuario, review, validado = validarUsuario ()
 subMenu(usuario)
+=======
+def Inicio():
+    listaUsuarios, listaPassword, listaDinero = separarLista()
+    usuario, review, validado = validarUsuario ()
+    dineroJugador = listaDinero[review]
+    dineroJugador = float(dineroJugador)
+    subMenu(usuario, review)
+
+Inicio()
+
+>>>>>>> Stashed changes
