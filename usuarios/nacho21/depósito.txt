@@ -1,0 +1,2 @@
+Monto 20000.00 
+Moneda dólares 

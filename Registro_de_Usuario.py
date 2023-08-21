@@ -77,6 +77,9 @@ def registroUsuario():
                     rutaArchivoUsuario = os.path.join(rutaCarpetaUsuario, "informacionUsuario.txt")
                     with open(rutaArchivoUsuario, "w") as archivo:
                         archivo.write(f"ID: {usuarioNuevo}\nNombre: {nombre}\nContraseña: {pinNuevo}\nDepósito: {monto:.2f} dólares\n")
+                    rutaArchivoDeposito = os.path.join(rutaCarpetaUsuario, "depósito.txt")
+                    with open(rutaArchivoDeposito, "w") as archivo_deposito:
+                         archivo_deposito.write(f"Monto {monto:.2f} \nMoneda {moneda} ")
 
                     # Mostrar mensaje de registro exitoso y regresar True para indicar éxito
                     print("¡Registro Exitoso!")

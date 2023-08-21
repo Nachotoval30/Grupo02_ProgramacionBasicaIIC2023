@@ -1,0 +1,4 @@
+ID: nacho21
+Nombre: ignacio
+Contraseña: 123456
+Depósito: 20000.00 dólares
