@@ -7,8 +7,8 @@ print("Bienvenido al registro de usuario")
 # Variables de las diferentes monedas y sus conversiones.
 valorMinimo = 200
 dolares = 1
-colones = 536
-bitcoin = 30590
+colones = 565
+bitcoin = 26755
 colonesADolares = 0.0018
 
 # Carpeta principal donde se guardarán los usuarios y archivos.
@@ -76,7 +76,13 @@ def registroUsuario():
                     # Guardar la información del usuario en un archivo
                     rutaArchivoUsuario = os.path.join(rutaCarpetaUsuario, "informacionUsuario.txt")
                     with open(rutaArchivoUsuario, "w") as archivo:
-                        archivo.write(f"ID {usuarioNuevo} \nNombre {nombre} \nContrasena {pinNuevo} \nDepósito {monto:.2f} ")
+                        archivo.write(f"ID: {usuarioNuevo}\nNombre: {nombre}\nContrasena: {pinNuevo}\nDeposito: {monto:.2f} dólares\n")
+
+                    #Guardar el deposito del usuario.
+                    rutaArchivoDeposito = os.path.join(rutaCarpetaUsuario,"deesposito.txt")
+                    with open(rutaArchivoDeposito, "w") as archivoDeposito:
+                        archivoDeposito.write(f"Deposito realizado:  {monto:.2f} dólares en {moneda}\n")
+
 
                     # Mostrar mensaje de registro exitoso y regresar True para indicar éxito
                     print("¡Registro Exitoso!")
