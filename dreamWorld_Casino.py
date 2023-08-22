@@ -1,5 +1,5 @@
-#Segundo avance Diego Aguero
 #Dreamworld casino
+
 import getpass
 import random
 import sys
@@ -51,26 +51,24 @@ listaUsuarios = []
 listaPassword = []
 listaDinero = []
 listaNombre = []
-#rutaArchivo = 'usuarios/cho56/informacionUsuario.txt'
+
+
 #En la siguiente funcion separamos el archivo en diferentes listas, para asi tener los usuarios, password y dineros registrados
-#Tomar en cuenta que el archivo al que llama es una prueba
+
 def separarLista():
     numeroLinea = 0
-    #Con el archivo abierto el programa hara una revision de toda la lista y hara un append de las listas dependiendo de si es usuario, password o dinero
-    #Tomar en cuenta que en el archivo se tiene que tener el formato 
-    #Usuario Password Dinero
+    #El programa hace un scaneo de las carpetas que se encuentran dentro de usuarios, por cada carpeta 
+    #abre el programa y hace una revision del archivo de informacion y se hace un append en cada respectiva lista
+     
     with os.scandir("usuarios") as cmd:
         for test in cmd:
-            #print("testsetse",test.name)
+            
             rutaArchivo = os.path.join(rutaCarpetaUsuario, test.name, "informacionUsuario.txt")
             with open(rutaArchivo, "r") as archivo:
-            #with open("usuariosPrueba.txt", "r") as archivo:
+            
                 for line in archivo:
                     numeroLinea = numeroLinea + 1
-                    #separado = " ".join(item.strip() for item in line.split(": "))
                     separado = line.split(" ")
-                    #separado = line.split(" ")
-                    #print("SEPARADO", separado[0])
                     if(separado[0] == "ID"):
                         listaUsuarios.append(separado[1])
                         #print("ID", listaUsuarios)
@@ -85,6 +83,7 @@ def separarLista():
                         #print("Nombre", listaNombre)
 
     #Se tiene que cerrar el archivo antes de terminar la funcion para poder usarse despues y no desperdiciar memoria
+    
     #print(listaUsuarios, listaPassword, listaDinero)
     archivo.close()
     return listaUsuarios, listaPassword, listaDinero
@@ -94,7 +93,7 @@ def validarUsuario():
     intentos = 0
     count = 1
     review = 0
-    #Recordamos en el primer print al usuario que solo cuenta con 3 intentos
+
     print("Ingrese el usuario solicitado, recuerde que solo tiene 3 intentos")
     while intentos < 3:
         if(count <= 3):
@@ -111,12 +110,11 @@ def validarUsuario():
                 review = review + 1
                 if(id == usuario):
                     intentos = 3
-                    #print("index", review)
-                    #print("id", id)
                     print("Usuario ingresado correctamente")
                     break
         else:             
             print("Se excedió en el maximo de intentos para ingresar su ID, volviendo al menú principal")
+            #En caso de excederse con el numero de intentos importamos del archivo Principal_Dreamworld_Casino el menu principal
             from Principal_Dreamworld_Casino import mostrarMenu    
 
     #La siguiente seccion trabaja de la misma manera que la anterior con un pequeno cambio
@@ -139,7 +137,7 @@ def validarUsuario():
                     break
         else:             
             print("Se excedió en el maximo de intentos para ingresar su PIN, volviendo al menú principal")
-            #Se llama a la funcion Validar Usuarios para efectos practicos, en el main se debe llamar al menu inicial
+
             from Principal_Dreamworld_Casino import mostrarMenu     
     #print("review", review)
     review = review - 1
@@ -148,20 +146,19 @@ def validarUsuario():
 
 #Esta funcion realiza la revision de saldo del usuario
 def revisarSaldo(review):
-    #Para realizarlo vamos a llamar a la funcion que separa en listas las bases de datos
-    #y devuelve el index del que se quiere buscar para obtener el dinero en especifico
-    #listaUsuarios, listaPassword, listaDinero= separarLista()
+    #Se hace un print del dinero disponible, obteniendo los datos de la lista de Dinero
     dineroDisponible = listaDinero[review]
     print("Dinero disponible", dineroDisponible)
     return dineroDisponible
 
+#Esta funcion realiza el retiro de dinero del usuario
 def retirarDinero(usuario, review):
+    #Se asigna una variable flotante al dinero disponible para realizar operaciones
     dineroDisponible  = float(revisarSaldo(review))
     count = 1
     rutaArchivo = os.path.join(rutaCarpetaUsuario, usuario, "informacionUsuario.txt")
     r=0
     intentos = 0
-    #listaUsuarios, listaPassword, listaDinero= separarLista()
     print("Ingrese la cantidad de Dinero a retirar, recuerde que tiene 3 intentos para realizar el retiro")
     while intentos < 3: 
         if(count <= 3):
@@ -170,11 +167,9 @@ def retirarDinero(usuario, review):
             #print ("Intento #", count - 1)
             try:
                 retiro = float(input("Cantidad de Dinero a retirar"))
-                #print("REVIEWW", listaDinero)
-                #print("disponible", dineroDisponible)
                 if(retiro <= dineroDisponible):
                     listaDinero[review] = float(listaDinero[review]) - retiro
-                    #Agregar escritura de datos
+                    #Agregamos la escritura de datos al archivo en especifico del usuario con el formato especificado
                     with open(rutaArchivo, "w") as archivo:
                         archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
                         r = r + 1
@@ -182,6 +177,7 @@ def retirarDinero(usuario, review):
                     print("El disponible actual es de:", listaDinero[review])
                     archivo.close()
                     intentos = 3
+                    #Una vez terminado el proceso regresamos al submenu
                     subMenu(usuario, review)
                     
                 else:
@@ -191,12 +187,15 @@ def retirarDinero(usuario, review):
                 count = count + 1
         else:
             print("Se excedió del numero de intentos")
+            #Al excederse el numero de intentos igual se hace un update de los archivos de informacion
             with open(rutaArchivo, "w") as archivo:
                 archivo.write(f"ID {usuario} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
                 r = r + 1
+            #Regresamos al submenu
             subMenu(usuario, review)
             break
-                
+
+#Esta funcion realiza el deposito de dinero                
 def depositarDinero(usuario, review):
     listaDivisa = []
     listaValor = []
@@ -204,12 +203,12 @@ def depositarDinero(usuario, review):
     numeroLinea = 0
     count = 0
     valorDivisa = 0
-    write = 0
     rutaArchivo = os.path.join(rutaCarpetaUsuario, usuario, "informacionUsuario.txt")
     print("Las divisas soportadas son las siguientes:")
     print("1-Colones")
     print("2-Dolares")
     print("3-Bitcoin")
+    #Abrimos el archivo de configuracion avanzada para obtener los valores de las divisas
     with open("configuracionAvanzada.txt", "r") as archivo:
         for line in archivo:
             numeroLinea = numeroLinea + 1    
@@ -223,21 +222,20 @@ def depositarDinero(usuario, review):
                 break
     archivo.close()
     count=0
-    #Se realiza un try y except para tomar en cuenta que un usuario ingrese un valor distinto a los solicitados en el menu
-    
+        #Se realiza un try y except para tomar en cuenta que un usuario ingrese un valor distinto a los solicitados en el menu
         #Si el valor ingresado es 1 se llama a la funcion retirar dinero y asi consecutivamente de acuerdo a lo solicitado
     while count < 3:
         try:
             decision = int(input("En que divisa desea realizar el deposito"))
             if decision == 1:
-                    #deposito = input(float("Digite la cantidad de colones para depositar"))
-                    #Al momento de la revision dos se encuentra en proceso la funcion retirar dinero
                 try:
                     deposito = float(input("Digite la cantidad de Colones para depositar"))
                     for i in listaDivisa:
                         if(i == "colones"):
                             valorDivisa = int(listaValor[0])
-                            print(valorDivisa)
+                            #print(valorDivisa)
+
+                            #Se realiza la operacion para obtener el valor en dolares de los colones con el tipo de cambio del archivo de configuracion
                             deposito = deposito / valorDivisa
                             print(f"El deposito en dolares a realizar es de {deposito}")
                             deposito = deposito + float(listaDinero[review])
@@ -246,9 +244,6 @@ def depositarDinero(usuario, review):
                             listaDinero[review] = str(deposito)
                             with open(rutaArchivo, "w") as archivo:
                                 archivo.write(f"ID {listaUsuarios[review]} \nNombre {listaNombre[review]} \nContrasena {listaPassword[review]} \nDeposito {listaDinero[review]} ")
-                                    #archivo.write(str([listaUsuarios[write], listaPassword[write], listaDinero[write]]).replace("'", "").replace("[", "").replace("]", "").replace(",","").replace("\n", ""))
-                                    #archivo.write("\n")
-                                    #write = write + 1
                     break
                 except ValueError:
                     count = count +1     
@@ -258,7 +253,6 @@ def depositarDinero(usuario, review):
             elif decision == 2:
                 try:
                     deposito = float(input("Digite la cantidad de Dolares para depositar"))
-                        #Al momento de la revision dos se encuentra en proceso la funcion de depositar dinero
                     print(f"El deposito en dolares a realizar es de {deposito}")
                     deposito = deposito + float(listaDinero[review])
                     deposito = round(deposito, 3)
@@ -278,6 +272,7 @@ def depositarDinero(usuario, review):
                     for i in listaDivisa:
                         if(i == "bitcoin"):
                             valorDivisa = int(listaValor[1])
+                            #Se realiza la operacion para obtener el valor en dolares de los bitcoin con el tipo de cambio del archivo de configuracion
                             deposito = deposito * valorDivisa
                             print(f"El deposito en dolares a realizar es de {deposito}")
                             deposito = deposito + float(listaDinero[review])
@@ -289,47 +284,47 @@ def depositarDinero(usuario, review):
                     break
 
                 except ValueError:
-                            #la funcion revisar saldo se encuentra corriendo
                     count = count +1
-                    #print("test3")
             else:
                 print("Elvalor ingresado no esta dentro de las opciones, intente de nuevo")
         except ValueError:
             count = count +1
             print("El valor ingresado no se encuentra dentro de las opciones, intentelo de nuevo")
     else:
-        print("Excedio el maximo de intentos para realizar el deposito, volviendo al menu principal")
+        print("Excedio el maximo de intentos para realizar el deposito, volviendo al submenu")
         subMenu(usuario, review)        
 
-
+#Esta funcion elimina al usuario
 def eliminarUsuario():
-    write = 0
     print("Antes de eliminar el usuario vamos a verificar su identidad")
     usuario, review, validado = validarUsuario()
     dineroDisponible = float(revisarSaldo(review))
-    print(dineroDisponible)
+    
+    #Si el usuario fue validado con exito revisa si el dinero disponible es 0 
     if(validado == 1):
         if dineroDisponible == 0:
-            #print("aqui")
+            #Como el dinero disponible es 0 se hace un shutil para eliminar el usuario y todos los files
             shutil.rmtree(os.path.join(rutaCarpetaUsuario, usuario))
             print("Usuario eliminado con éxito!")
             print("Regresando al menu principal")
             from Principal_Dreamworld_Casino import mostrarMenu    
         else:
+            #Si el dinero disponible es mayor se regresa al menu principal
             print("Para eliminar el usuario debe retirar todo el dinero o volver a jugar")
-            print("Regresando al menu")
+            print("Regresando al submenu")
             subMenu(usuario, review)
     else:
         print("Usuario no validado")
         print("Regresando al menu")
         subMenu(usuario, review)
 
+#Esta funcion se sale del programa.
 def salir():
     #Debe salir al menu principal, regresando a submenu por temas practicos
     print("Saliendo")
     sys.exit()
     
-####################################################
+#################################################### 
 #Verificar que el jugador tenga el mínimo de dinero para poder jugar
 def verificarDinero(review):
     dineroJugador = listaDinero[review]
@@ -384,39 +379,7 @@ def obtenerApuesta(review):
                     #print("TESTEST", listaDinero[review])
                     return apuesta, dineroJugador
 
-####################################################
-
-#def verificarDinero():
-#    global dineroJugador
-#    #Verificar si el jugador tiene el monto mínimo para jugar
-#    if dineroJugador < apuestaMinima:
-#        print(f"Lo sentimos, no tienes el monto mínimo para jugar. La apuesta minima es de: ${apuestaMinima}")
-#        #CAMBIAAAAARRRR DEBE VOLVER AL SUBMENU DE JUEGOS
-#        sys.exit()
-#    else:
-#        print(f"Tu saldo actual es: ${dineroJugador}")
-#        return dineroJugador
-    
-'''def obtenerApuesta():
-    global apuesta
-    global dineroJugador
-
-    #Obtener apuesta del jugador, verificar que sea un número válido y que sea mayor o igual a la apuesta mínima y menor o igual al saldo del jugador
-    while True:
-        try:
-            apuesta = float(input("Ingresa el monto de tu apuesta para jugar: "))
-        except ValueError:          
-            print("Lo sentimos, debes ingresar un número entero.")
-            continue
-        else:
-            if apuesta < apuestaMinima:
-                print(f"Lo sentimos, la apuesta mínima es de: ${apuestaMinima}")
-            elif apuesta > dineroJugador:
-                print(f"Lo sentimos, no tienes saldo suficiente para apostar ${apuesta}. Tu saldo actual es: ${dineroJugador}")
-            else:
-                print(f"Tu nuevo saldo actual es: ${dineroJugador - apuesta}")
-                return apuesta, dineroJugador
-'''
+#################################################### BlackJack
 
 def obtenerBaraja():
     #Obtener baraja de forma aleatoria
@@ -796,7 +759,7 @@ def principalBlackJack():
     rondaJugada()
 
 
-#######################################################
+####################################################### Tragamonedas
 #Verificar que el jugador tenga el mínimo de dinero para poder jugar
 
 def obtenerFiguras():
@@ -895,9 +858,8 @@ def principal(review):
 ########################################################
 
 #La funcion submenu es la principal funcion que se va a mostrar al usuario
-#actualmente algunas de sus funciones se encuentran en proceso
 def subMenu(usuario, review):
-    #separarLista()
+    #Se encicla el programa para que muestre el submenu
     while True:
         print("Bienvenido a dreamworld casino ", usuario)
         print("Para retirar dinero digite 1")
@@ -912,16 +874,12 @@ def subMenu(usuario, review):
             #Si el valor ingresado es 1 se llama a la funcion retirar dinero y asi consecutivamente de acuerdo a lo solicitado
             print(decision)
             if decision == 1:
-                #Al momento de la revision dos se encuentra en proceso la funcion retirar dinero
                 retirarDinero(usuario, review)
             elif decision == 2:
-                #Al momento de la revision dos se encuentra en proceso la funcion de depositar dinero
                 depositarDinero(usuario, review)
             elif decision == 3:
-                #la funcion revisar saldo se encuentra corriendo
                 revisarSaldo(review)
             elif decision == 4:
-                #Se encuentra en proceso en conjunto con otro companero
                 decision = int(input("Seleccione 1 para jugar BlackJack \nSeleccione 2 para jugar Tragamonedas \nSeleccione 3 para salir al menu"))
                 if decision == 1:
                     principalBlackJack()
@@ -929,9 +887,7 @@ def subMenu(usuario, review):
                     principal(review)
                 elif decision == 3:
                     subMenu(usuario)
-                #principalBlackJack(dineroDisponible)
             elif decision == 5:
-                #Se encuentra en proceso en conjunto con otro companero
                 eliminarUsuario()
             elif decision == 6:
                 salir()
@@ -944,9 +900,7 @@ def subMenu(usuario, review):
 
 
 
-#Todavia no se ha realizado un main ya que las funciones se prueban separadas primero y se debuggean
-#cuando ya funcionan se hace una revision de como trabajan en conjunto
-
+#La funcion de inicio setea valores iniciales y llama al submenu
 def Inicio():
     listaUsuarios, listaPassword, listaDinero = separarLista()
     usuario, review, validado = validarUsuario ()
