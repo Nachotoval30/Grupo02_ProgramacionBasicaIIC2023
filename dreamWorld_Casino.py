@@ -131,7 +131,6 @@ def validarUsuario():
                 #review para que haga match con la ingresada por el usuario
                 if(PIN == listaPassword[review - 1]):
                     intentos = 3
-                    print("PIN", PIN)
                     print("PIN ingresado correctamente")
                     validado = 1
                     break

@@ -1,4 +1,0 @@
-ID: nacho16
-Nombre: ignacio
-Contraseña: 123468
-Depósito: 200.00 dólares

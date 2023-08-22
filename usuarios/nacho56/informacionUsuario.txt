@@ -1,4 +1,0 @@
-ID: nacho56
-Nombre: igancio
-Contrase�a: 123456
-Dep�sito: 200.00 d�lares
