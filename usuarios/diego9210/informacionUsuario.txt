@@ -1,0 +1,4 @@
+ID diego9210 
+Nombre Diego 
+Contrasena 921092 
+Deposito 30590.00 
