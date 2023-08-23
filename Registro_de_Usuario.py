@@ -76,7 +76,7 @@ def registroUsuario():
                     # Guardar la información del usuario en un archivo
                     rutaArchivoUsuario = os.path.join(rutaCarpetaUsuario, "informacionUsuario.txt")
                     with open(rutaArchivoUsuario, "w") as archivo:
-                        archivo.write(f"ID {usuarioNuevo} \nNombre {nombre} \nContrasena {pinNuevo} \nDepósito {monto:.2f} ")
+                        archivo.write(f"ID {usuarioNuevo} \nNombre {nombre} \nContrasena {pinNuevo} \nDeposito {monto:.2f} ")
 
                     # Mostrar mensaje de registro exitoso y regresar True para indicar éxito
                     print("¡Registro Exitoso!")

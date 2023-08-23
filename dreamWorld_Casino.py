@@ -84,7 +84,7 @@ def separarLista():
 
     #Se tiene que cerrar el archivo antes de terminar la funcion para poder usarse despues y no desperdiciar memoria
     
-    #print(listaUsuarios, listaPassword, listaDinero)
+    print(listaUsuarios, listaPassword, listaDinero)
     archivo.close()
     return listaUsuarios, listaPassword, listaDinero
 
